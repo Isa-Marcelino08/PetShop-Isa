@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Usuário - Petshop</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+      
+        body {
+          font-family: 'Poppins', sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f3f4f6;
+          text-align: center; /* Centraliza o conteúdo */
+        }
+      
+        .signup-container {
+          max-width: 400px;
+          margin: 50px auto;
+          padding: 25px;
+          background-color: #e6f7ff; /* Azul claro */
+          border-radius: 12px;
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+          border: 2px solid #002366; /* Contorno azul */
+        }
+      
+        h1 {
+          margin: 20px 0;
+          font-size: 2.2rem;
+          color: #002366; /* Azul escuro */
+          font-weight: 600;
+          letter-spacing: 1px;
+        }
+      
+        h2 {
+          text-align: center;
+          margin-bottom: 20px;
+          color: #002366;
+          font-size: 1.8rem;
+          font-weight: 600;
+          letter-spacing: 0.8px;
+        }
+      
+        input {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-bottom: 15px;
+          box-sizing: border-box;
+          font-size: 1rem;
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+      
+        input:focus {
+          border-color: #002366;
+          box-shadow: 0 0 8px rgba(0, 35, 102, 0.5);
+          outline: none;
+        }
+      
+        button {
+          width: 100%;
+          padding: 12px;
+          background-color: #ffd700; /* Amarelo vibrante */
+          border: none;
+          border-radius: 8px;
+          color: #002366; /* Azul escuro */
+          font-size: 1.2rem;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s ease, transform 0.2s ease;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+      
+        button:hover {
+          background-color: #e6b800; /* Tom mais escuro de amarelo */
+          transform: translateY(-2px); /* Efeito de elevação */
+        }
+      
+        a {
+          color: #002366; /* Azul escuro */
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 1rem;
+          display: inline-block;
+          margin-top: 15px;
+        }
+      
+        a:hover {
+          text-decoration: underline;
+        }
+      
+        footer {
+          margin-top: 20px;
+          padding: 10px;
+          background-color: #002366; /* Azul escuro */
+          color: #ffd700; /* Amarelo */
+          font-size: 1rem;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+        }
+      
+        footer p {
+          margin: 0;
+        }
+      </style>
+</head>
+<body>
+    <header>
+        <h1>Petshop Amigo - Cadastro de Usuário</h1>
+    </header>
+
+    <main>
+        <section class="signup-container">
+            <h2>Cadastre-se</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="name">Nome Completo:</label>
+                    <input type="text" id="name" name="name" placeholder="Digite seu nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" placeholder="Crie uma senha" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirme sua Senha:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirme sua senha" required>
+                </div>
+                <button type="submit">Cadastrar</button>
+            </form>
+            <p>Já possui uma conta? <a href="/login">Faça login</a></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Petshop Amigo - Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+    const signupForm = document.getElementById("signupForm");
+
+    signupForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password !== confirmPassword) {
+            alert("As senhas não coincidem. Tente novamente.");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8080/api/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            if (response.ok) {
+                alert("Cadastro realizado com sucesso!");
+                window.location.href = "/login";
+            } else {
+                alert("Erro no cadastro. Verifique os dados e tente novamente.");
+            }
+        } catch (error) {
+            console.error("Erro ao conectar ao servidor:", error);
+            alert("Erro ao conectar ao servidor. Tente novamente mais tarde.");
+        }
+    });
+});
+
+    </script>
+</body>
+</html>
+
+
+<!-- @RestController
+@RequestMapping("/api")
+public class SignupController {
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody User user) {
+        // Simulando a lógica de cadastro
+        if (user.getEmail().isEmpty() || user.getPassword().isEmpty()) {
+            return ResponseEntity.badRequest().body("Dados inválidos");
+        }
+        // Em produção, insira o usuário no banco de dados
+        return ResponseEntity.ok("Usuário cadastrado com sucesso");
+    }
+
+    public static class User {
+        private String name;
+        private String email;
+        private String password;
+
+        // Getters e Setters
+    }
+} -->
